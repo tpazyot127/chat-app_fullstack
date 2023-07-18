@@ -10,7 +10,6 @@ import {
   Configuration,
   OpenAIApi,
 } from 'openai';
-import { UserDocument } from 'src/users/schemas/user.schema';
 
 @Injectable()
 export class ChatService {
@@ -27,18 +26,18 @@ export class ChatService {
   async saveChat(
     chat: any,
     chatId: string,
-    user: UserDocument,
+    userEmail: string,
   ): Promise<ChatDocument> {
     if (!Types.ObjectId.isValid(chatId)) {
       throw new BadRequestException('Invalid chat ID.');
     }
-
+    
     const userMessage = await this.ChatModel.findById(chatId);
 
     if (!userMessage) {
       const newChat = new this.ChatModel({
         chat: JSON.stringify(chat), // convert chat object to string
-        username: user.email,
+        username: userEmail,
         _id: chatId, //chatId is userId
       });
       const savedChat = await newChat.save();
@@ -46,7 +45,7 @@ export class ChatService {
       return savedChat;
     } else {
       userMessage.chat = JSON.stringify(chat); // convert chat object to string
-      userMessage.username = user.email;
+      userMessage.username = userEmail;
       userMessage._id = chatId;
 
       const updatedOrder = await userMessage.save();
@@ -59,7 +58,7 @@ export class ChatService {
     return await this.ChatModel.findById(id).exec();
   }
 
-  async createChat(chat: any, chatId: string, user: UserDocument) {
+  async createChat(chat: any) {
     let newQuestion: {
       messages: ConcatArray<{ role: 'system'; content: string }>;
     };
@@ -84,16 +83,7 @@ export class ChatService {
       ].concat(newQuestion.messages),
       temperature: 0,
     });
-    const userMessage = await this.ChatModel.findById(chatId);
-
-    if (!userMessage) {
-      const newChat = new this.ChatModel({
-        chat: JSON.stringify(chat), // convert chat object to string
-        username: user.email,
-        _id: chatId, //chatId is userId
-      });
-      await newChat.save();
-    }
+    
     const result = new this.ChatModel(completion.data.choices[0].message);
 
     return result;

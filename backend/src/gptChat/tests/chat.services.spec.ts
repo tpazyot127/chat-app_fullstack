@@ -45,9 +45,9 @@ describe('ChatService', () => {
   describe('saveChat', () => {
     it('should save a chat object', async () => {
       const chatId = '649870fbf88fe12756ef7a90';
-      const user = { email: 'test@example.com' } as UserDocument;
+      const user = 'test@example.com';
       const chat = { id: chatId, question: 'Test question' };
-      const savedChat = { ...chat, username: user.email };
+      const savedChat = { ...chat, username: user };
       chatModel.findById.mockResolvedValue(null);
       chatModel.save.mockResolvedValue(savedChat);
 
@@ -59,9 +59,9 @@ describe('ChatService', () => {
 
     it('should update an existing chat object', async () => {
       const chatId = '649870fbf88fe12756ef7a90';
-      const user = { email: 'test@example.com' } as UserDocument;
+      const user = 'test@example.com';
       const chat = { id: chatId, question: 'Test question' };
-      const updatedChat = { ...chat, username: user.email };
+      const updatedChat = { ...chat, username: user };
       chatModel.findById.mockResolvedValue(updatedChat);
       chatModel.save.mockResolvedValue(updatedChat);
 
@@ -73,11 +73,13 @@ describe('ChatService', () => {
 
     it('should throw a BadRequestException for invalid chat ID', async () => {
       const chatId = 'invalid-id';
-      const user = { email: 'test@example.com' } as UserDocument;
+      const user = 'test@example.com';
       const chat = { id: chatId, question: 'Test question' };
       chatModel.findById.mockResolvedValue(null);
 
-      await expect(service.saveChat(chat, chatId, user)).rejects.toThrow(BadRequestException);
+      await expect(service.saveChat(chat, chatId, user)).rejects.toThrow(
+        BadRequestException,
+      );
       expect(chatModel.save).not.toHaveBeenCalled();
     });
   });
@@ -85,8 +87,10 @@ describe('ChatService', () => {
   describe('createChat', () => {
     it('should create a chat object', async () => {
       const chatId = '649870fbf88fe12756ef7a90';
-      const user = { email: 'test@example.com' } as UserDocument;
-      const chat = { context: '{"messages":[{"role":"system","content":"Hello!"}]}' };
+      const user = 'test@example.com';
+      const chat = {
+        context: '{"messages":[{"role":"system","content":"Hello!"}]}',
+      };
       const completion = {
         data: {
           choices: [{ message: 'Hi there!' }],
@@ -103,7 +107,7 @@ describe('ChatService', () => {
       const configurationConstructor = jest.fn().mockReturnValue(configuration);
       const openaiConstructor = jest.fn().mockReturnValue(openai);
 
-      const result = await service.createChat(chat, chatId, user);
+      const result = await service.createChat(chat);
 
       expect(result).toEqual(completion.data.choices[0].message);
       expect(chatModel.findById).toHaveBeenCalledWith(chatId);
@@ -128,18 +132,20 @@ describe('ChatService', () => {
       });
       expect(chatModel.save).toHaveBeenCalledWith({
         chat: completion.data.choices[0].message,
-        username: user.email,
+        username: user,
         _id: chatId,
       });
     });
 
     it('should throw a BadRequestException for invalid question format', async () => {
       const chatId = '649870fbf88fe12756ef7a90';
-      const user = { email: 'test@example.com' } as UserDocument;
+      const user = 'test@example.com';
       const chat = { context: 'invalid-json' };
       chatModel.findById.mockResolvedValue(null);
 
-      await expect(service.createChat(chat, chatId, user)).rejects.toThrow(BadRequestException);
+      await expect(service.createChat(chat)).rejects.toThrow(
+        BadRequestException,
+      );
       expect(chatModel.save).not.toHaveBeenCalled();
     });
   });

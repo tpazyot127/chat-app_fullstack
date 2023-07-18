@@ -11,31 +11,45 @@ interface ReturnedData {
   _id: string;
 }
 
-
 const Dashboard: React.FC = () => {
-  const { createChat, saveChat, fetchChats } = useChatActions();
+  const { createChat, saveChat, fetchChat } = useChatActions();
 
   const { error, data, loading }: any = useTypedSelector((state) => state.chat);
 
   const chatData: any = useTypedSelector((state) => state.chatMessages.data);
-  const accessToken = useLocalStorage("", "accessToken");
   
+  const accessToken = useLocalStorage("", "accessToken");
+  const user = useLocalStorage("", "userDatas");
+
+  const [userDatas, setUserDatas] = useState<any>({});
+
   const [userInput, setUserInput] = useState("");
   const [errorData, setErrorData] = useState<ReturnedData | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
 
   useEffect(() => {
+    if (user) {
+      try {
+        const chat = JSON.parse(user);
+        fetchChat(chat._id);
+        setUserDatas(chat);
+      } catch (error) {
+        console.error("Error parsing user datas:", error);
+      }
+    }
+  }, [user]);
+
+  useEffect(() => {
     if (chatData && chatData.chat) {
       try {
         const chat = JSON.parse(chatData.chat);
-        const returnedMessages = JSON.parse(chat?.context) || [];
-        setMessages(returnedMessages.messages)
+        const returnedMessages = JSON.parse(chat) || [];
+        setMessages(returnedMessages.messages);
       } catch (error) {
         console.error("Error parsing chat:", error);
       }
     }
   }, [chatData && chatData.chat]);
-
 
   // Auto scroll chat to bottom
   useEffect(() => {
@@ -44,10 +58,6 @@ const Dashboard: React.FC = () => {
       messageList.scrollTop = messageList.scrollHeight;
     }
   }, [messages]);
-
-  useEffect(() => {
-      fetchChats();
-  }, []);
 
   // Focus on input field
   useEffect(() => {
@@ -67,7 +77,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (messages.length > 0) {
-      saveChat(JSON.stringify({ messages }));
+      saveChat(JSON.stringify({ messages }), userDatas.email, userDatas._id);
     }
   }, [messages, saveChat]);
 

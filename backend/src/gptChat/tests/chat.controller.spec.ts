@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ChatController } from '../controller/chat.controller';
 import { ChatService } from '../services/chat.service';
 import { AuthGuard } from '../../guards/auth.guard';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 
 describe('ChatController', () => {
   let controller: ChatController;
@@ -23,27 +22,29 @@ describe('ChatController', () => {
 
   describe('getChat', () => {
     it('should return a chat object', async () => {
-      const session = { user: { _id: '123' } };
+      const id = '123';
+      const question = 'Test question';
       const chat: any = {
         _id: '456',
         chat: [],
         role: 'user',
-        content: 'Test question',
+        content: question,
         username: 'testuser',
       };
       jest.spyOn(service, 'findChat').mockResolvedValue(chat);
 
-      const result = await controller.getChat(session);
+      const result = await controller.getChat(id);
 
       expect(result).toEqual(chat);
-      expect(service.findChat).toHaveBeenCalledWith(session.user._id);
+      expect(service.findChat).toHaveBeenCalledWith(id);
     });
   });
 
   describe('saveChat', () => {
     it('should save a chat object', async () => {
-      const session = { user: { _id: '123' } };
+      const id = '123';
       const question = 'Test question';
+      const email = 'example@gmail.com'
       const chat: any = {
         _id: '456',
         chat: [],
@@ -53,21 +54,22 @@ describe('ChatController', () => {
       };
       jest.spyOn(service, 'saveChat').mockResolvedValue(chat);
 
-      const result = await controller.saveChat(question, session);
+      const result = await controller.createChat(question );
 
       expect(result).toEqual(chat);
       expect(service.saveChat).toHaveBeenCalledWith(
         question,
-        session.user._id,
-        session.user,
+        id,
+        email,
       );
     });
   });
 
   describe('createChat', () => {
     it('should create a chat object', async () => {
-      const session = { user: { _id: '123' } };
+      const id = '123';
       const question = 'Test question';
+      const email = 'example@gmail.com'
       const chat: any = {
         _id: '456',
         chat: [],
@@ -77,13 +79,13 @@ describe('ChatController', () => {
       };
       jest.spyOn(service, 'createChat').mockResolvedValue(chat);
 
-      const result = await controller.createChat(question, session);
+      const result = await controller.createChat(question );
 
       expect(result).toEqual(chat);
       expect(service.createChat).toHaveBeenCalledWith(
         question,
-        session.user._id,
-        session.user,
+        id,
+        email,
       );
     });
   });

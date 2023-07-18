@@ -4,37 +4,37 @@ import { api } from "../../lib";
 import { ActionTypes } from "./chat.action-types";
 import { ChatAction } from "./chat.actions";
 
-export const fetchChats = () => async (dispatch: Dispatch<ChatAction>) => {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    withCredentials: true,
-  };
-  try {
-    dispatch({
-      type: ActionTypes.FETCH_CHAT,
-    });
-    const { data } = await api.get(`/gpt/question`, config);
-
-    dispatch({
-      type: ActionTypes.FETCH_CHAT_SUCCESS,
-      payload: data,
-    });
-  } catch (error: any) {
-    dispatch({
-      type: ActionTypes.FETCH_CHAT_ERROR,
-      payload: error.response,
-    });
-  }
-};
-
-export const createChat =
-  (context: string) =>
-  async (dispatch: Dispatch<ChatAction>) => {
+export const fetchChat =
+  (id: string) => async (dispatch: Dispatch<ChatAction>) => {
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    };
+    try {
+      dispatch({
+        type: ActionTypes.FETCH_CHAT,
+      });
+      const { data } = await api.get(`/gpt/question/${id}`, config);
+
+      dispatch({
+        type: ActionTypes.FETCH_CHAT_SUCCESS,
+        payload: data,
+      });
+    } catch (error: any) {
+      dispatch({
+        type: ActionTypes.FETCH_CHAT_ERROR,
+        payload: error.response,
+      });
+    }
+  };
+
+export const createChat =
+  (context: string) => async (dispatch: Dispatch<ChatAction>) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     };
@@ -58,13 +58,12 @@ export const createChat =
     }
   };
 
-
-  export const saveChat =
-  (context: string) =>
+export const saveChat =
+  (context: string, email: string, id: string) =>
   async (dispatch: Dispatch<ChatAction>) => {
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     };
@@ -72,7 +71,11 @@ export const createChat =
       dispatch({
         type: ActionTypes.CREATE_CHAT,
       });
-      const { data } = await api.put(`/gpt/chats`, { context }, config);
+      const { data } = await api.put(
+        `/gpt/chats/${id}`,
+        { context: context, email: email },
+        config
+      );
 
       dispatch({
         type: ActionTypes.CREATE_CHAT_SUCCESS,
