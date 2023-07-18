@@ -1,0 +1,18 @@
+{
+  "name": "chat-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/tpazyot127/chat-app_fullstack",
+  "scripts": {
+    "start:server": "npm run start:dev --prefix server",
+    "start:client": "npm run dev --prefix client",
+    "start-all": "concurrently \"cd client && yarn dev\" \"cd backend && yarn start:dev\"",
+    "install-all": "concurrently \"cd client && yarn install\" \"cd backend && yarn install\"",
+    "test" : "concurrently \"cd backend && yarn test\" \"cd client && yarn test\""
+  },
+  "author": "Edward Do <tpazyot127@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^7.0.0"
+  }
+}

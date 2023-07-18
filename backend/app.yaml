@@ -1,0 +1,9 @@
+runtime: nodejs18
+env_variables:
+  JWT_SECRET: 'tuananh127'
+  MONGODB_URL: 'mongodb+srv://ocop:tuananh127@cluster0.zud7h.mongodb.net/?retryWrites=true&w=majority'
+  CLIENT_URL: 'https://funny-movies-fullstack-client.vercel.app/'
+  SESSION_KEY: 'tuananh127'
+build_env_variables:
+  GOOGLE_NODE_RUN_SCRIPTS: ''
+instance_class: F1

@@ -1,0 +1,44 @@
+import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { ConfigService } from '@nestjs/config';
+import { MongooseModuleOptions } from '@nestjs/mongoose';
+import { SessionOptions } from 'express-session';
+
+export const connectDB = (
+  configService: ConfigService,
+): MongooseModuleOptions => {
+  const dbPassword = configService.get<string>('MONGODB_PASSWORD');
+  const dbName = configService.get<string>('MONGODB_DATABASE_NAME');
+
+  const mongodbUri = `mongodb+srv://ocop:tuananh127@cluster0.zud7h.mongodb.net/?retryWrites=true&w=majority`;
+
+  return {
+    uri: mongodbUri,
+    autoIndex: false,
+  };
+};
+
+export const corsConfig = (): CorsOptions => ({
+  origin: process.env.CLIENT_URL === 'DEV' ? 'http://localhost:3000' : 'https://funny-movies-fullstack-client.vercel.app',
+  methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
+  credentials: true,
+});
+
+
+export const sessionConfig = (MongoDBStore: any): SessionOptions => ({
+  secret: 'tuananh127',
+  resave: false,
+  saveUninitialized: false,
+  cookie:
+    process.env.CLIENT_URL !== 'DEV'
+      ? {
+          httpOnly: true,
+          sameSite: 'none',
+          secure: true,
+          maxAge: 3 * 24 * 60 * 60 * 1000,
+        }
+      : { maxAge: 3 * 24 * 60 * 60 * 1000 },
+  store: new MongoDBStore({
+    uri: process.env.MONGODB_URL,
+    collection: 'sessions',
+  }),
+});

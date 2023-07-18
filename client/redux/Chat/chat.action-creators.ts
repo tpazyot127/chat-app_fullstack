@@ -1,0 +1,87 @@
+import Router from "next/router";
+import { Dispatch } from "redux";
+import { api } from "../../lib";
+import { ActionTypes } from "./chat.action-types";
+import { ChatAction } from "./chat.actions";
+
+export const fetchChats = (accessToken: string) => async (dispatch: Dispatch<ChatAction>) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    withCredentials: true,
+  };
+  try {
+    dispatch({
+      type: ActionTypes.FETCH_CHAT,
+    });
+    const { data } = await api.get(`/gpt/question`, config);
+
+    dispatch({
+      type: ActionTypes.FETCH_CHAT_SUCCESS,
+      payload: data,
+    });
+  } catch (error: any) {
+    dispatch({
+      type: ActionTypes.FETCH_CHAT_ERROR,
+      payload: error.response,
+    });
+  }
+};
+
+export const createChat =
+  (context: string, accessToken: string) =>
+  async (dispatch: Dispatch<ChatAction>) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true,
+    };
+    console.log("context", context);
+
+    try {
+      dispatch({
+        type: ActionTypes.CREATE_CHAT,
+      });
+      const { data } = await api.post(`/gpt/chat`, { context }, config);
+
+      dispatch({
+        type: ActionTypes.CREATE_CHAT_SUCCESS,
+        payload: data,
+      });
+    } catch (error: any) {
+      dispatch({
+        type: ActionTypes.CREATE_CHAT_ERROR,
+        payload: error,
+      });
+    }
+  };
+
+
+  export const saveChat =
+  (context: string, accessToken: string) =>
+  async (dispatch: Dispatch<ChatAction>) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      withCredentials: true,
+    };
+    try {
+      dispatch({
+        type: ActionTypes.CREATE_CHAT,
+      });
+      const { data } = await api.put(`/gpt/chats`, { context }, config);
+
+      dispatch({
+        type: ActionTypes.CREATE_CHAT_SUCCESS,
+        payload: data,
+      });
+    } catch (error: any) {
+      dispatch({
+        type: ActionTypes.CREATE_CHAT_ERROR,
+        payload: error,
+      });
+    }
+  };
