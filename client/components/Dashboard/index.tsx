@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
   }, [messages]);
 
   useEffect(() => {
-      fetchChats(accessToken);
+      fetchChats();
   }, []);
 
   // Focus on input field
@@ -67,9 +67,9 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (messages.length > 0) {
-      saveChat(JSON.stringify({ messages }), accessToken);
+      saveChat(JSON.stringify({ messages }));
     }
-  }, [messages, accessToken, saveChat]);
+  }, [messages, saveChat]);
 
   useEffect(() => {
     setErrorData(error);
@@ -83,7 +83,7 @@ const Dashboard: React.FC = () => {
     }
     const context = [...messages, { role: "user", content: userInput }];
 
-    createChat(JSON.stringify({ messages: context }), accessToken);
+    createChat(JSON.stringify({ messages: context }));
     setMessages(context);
 
     // Reset user input

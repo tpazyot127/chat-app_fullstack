@@ -4,10 +4,10 @@ import { api } from "../../lib";
 import { ActionTypes } from "./chat.action-types";
 import { ChatAction } from "./chat.actions";
 
-export const fetchChats = (accessToken: string) => async (dispatch: Dispatch<ChatAction>) => {
+export const fetchChats = () => async (dispatch: Dispatch<ChatAction>) => {
   const config = {
     headers: {
-      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
     },
     withCredentials: true,
   };
@@ -30,11 +30,11 @@ export const fetchChats = (accessToken: string) => async (dispatch: Dispatch<Cha
 };
 
 export const createChat =
-  (context: string, accessToken: string) =>
+  (context: string) =>
   async (dispatch: Dispatch<ChatAction>) => {
     const config = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
       withCredentials: true,
     };
@@ -60,11 +60,11 @@ export const createChat =
 
 
   export const saveChat =
-  (context: string, accessToken: string) =>
+  (context: string) =>
   async (dispatch: Dispatch<ChatAction>) => {
     const config = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
       },
       withCredentials: true,
     };
