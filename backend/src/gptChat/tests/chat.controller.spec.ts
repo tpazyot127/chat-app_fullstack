@@ -11,16 +11,7 @@ describe('ChatController', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ChatController],
-      providers: [
-        ChatService,
-        {
-          provide: 'RateLimiterMemory',
-          useValue: new RateLimiterMemory({
-            points: 10, // Number of points
-            duration: 1, // Per second
-          }),
-        },
-      ],
+      providers: [ChatService],
     })
       .overrideGuard(AuthGuard)
       .useValue({ canActivate: () => true })

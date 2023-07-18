@@ -20,13 +20,6 @@ describe('ChatService', () => {
       providers: [
         ChatService,
         {
-          provide: 'RateLimiterMemory',
-          useValue: new RateLimiterMemory({
-            points: 10, // Number of points
-            duration: 1, // Per second
-          }),
-        },
-        {
           provide: getModelToken('Chat'),
           useValue: chatModel,
         },

@@ -18,7 +18,7 @@ export const connectDB = (
 };
 
 export const corsConfig = (): CorsOptions => ({
-  origin: process.env.CLIENT_URL === 'DEV' ? 'http://localhost:3000' : 'https://chat-app-fullstack.vercel.app/',
+  origin: process.env.CLIENT_URL === 'DEV' ? 'http://localhost:3000' : 'https://chat-app-fullstack.vercel.app',
   methods: 'GET, POST, OPTIONS, PUT, PATCH, DELETE',
   credentials: true,
 });

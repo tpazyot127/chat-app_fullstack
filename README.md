@@ -113,6 +113,9 @@ yarn dev
 ```
 
 Run test
+- run test at root folder
+```bash
+yarn test 
 
 ```bash
 cd backend

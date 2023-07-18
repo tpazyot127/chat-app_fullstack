@@ -2,32 +2,22 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import {
   BadRequestException,
-  Inject,
   Injectable,
-  InternalServerErrorException,
-  NotFoundException,
 } from '@nestjs/common';
 import { Chat, ChatDocument } from '../schemas/chat.schema';
 import {
-  ChatCompletionRequestMessage,
   ChatCompletionRequestMessageRoleEnum,
   Configuration,
   OpenAIApi,
 } from 'openai';
 import { UserDocument } from 'src/users/schemas/user.schema';
-import { RateLimiterMemory } from 'rate-limiter-flexible';
 
 @Injectable()
 export class ChatService {
-  constructor(
-    @InjectModel('Chat') private readonly ChatModel: Model<Chat>, 
-    @Inject('RateLimiterMemory') private readonly rateLimiter: RateLimiterMemory,
-    ) {}
+  constructor(@InjectModel('Chat') private readonly ChatModel: Model<Chat>) {}
 
   async findChat(chatId: string): Promise<ChatDocument> {
-    await this.rateLimiter.consume(chatId);
-
-    if (!Types.ObjectId.isValid(chatId)){
+    if (!Types.ObjectId.isValid(chatId)) {
       throw new BadRequestException('Invalid chat ID.');
     }
 
@@ -39,9 +29,7 @@ export class ChatService {
     chatId: string,
     user: UserDocument,
   ): Promise<ChatDocument> {
-    await this.rateLimiter.consume(chatId);
-
-    if (!Types.ObjectId.isValid(chatId)){
+    if (!Types.ObjectId.isValid(chatId)) {
       throw new BadRequestException('Invalid chat ID.');
     }
 
@@ -72,8 +60,6 @@ export class ChatService {
   }
 
   async createChat(chat: any, chatId: string, user: UserDocument) {
-    await this.rateLimiter.consume(chatId);
-
     let newQuestion: {
       messages: ConcatArray<{ role: 'system'; content: string }>;
     };

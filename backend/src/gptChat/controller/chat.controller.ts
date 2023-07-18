@@ -18,6 +18,9 @@ export class ChatController {
   @UseGuards(AuthGuard)
   @Get('/question')
   async getChat(@Session() session: any) {
+
+    console.log(99999999999999, session);
+    
     const chat = await this.ChatService.findChat(session.user._id);
     return chat;
   }
