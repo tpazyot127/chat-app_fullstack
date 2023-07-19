@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { connectDB } from './utils/config';
 import { ChatModule } from './gptChat/chat.module';
+import { RateLimiterModule } from 'nestjs-rate-limiter'
 
 @Module({
 	imports: [
@@ -18,6 +19,7 @@ import { ChatModule } from './gptChat/chat.module';
 		}),
 		UsersModule,
 		ChatModule,
+		RateLimiterModule
 	],
 	controllers: [AppController],
 	providers: [AppService],

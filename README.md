@@ -78,7 +78,6 @@ Add Environment Variables - Backend
   <summary>Click to expand!</summary>
   
   - `MONGODB_URL` 
-  - `JWT_SECRET`
   - `CLIENT_URL` : 'DEV' or 'PROD'
   - `OPENAI_ORGANIZATION`
   - `OPENAI_API_KEY`
@@ -94,7 +93,7 @@ Add Environment Variables - Frontend
 
 </details>
 
-Start all
+Start all at root folder
 
 ```bash
 yarn start-all
@@ -103,12 +102,14 @@ yarn start-all
 Start the server
 
 ```bash
+cd backend
 yarn start:dev
 ```
 
 Start the client
 
 ```bash
+cd client
 yarn dev
 ```
 

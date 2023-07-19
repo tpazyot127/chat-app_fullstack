@@ -9,6 +9,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { ChatService } from '../services/chat.service';
+import { RateLimit } from 'nestjs-rate-limiter'
 
 @Controller('gpt')
 export class ChatController {
@@ -29,6 +30,7 @@ export class ChatController {
     return chat;
   }
 
+  @RateLimit({ keyPrefix: 'chat', points: 5, duration: 10, errorMessage: 'User cannot ask more than five question in 10 seconds' })
   @Post('/chat')
   async createChat(
     @Body() question: string,
