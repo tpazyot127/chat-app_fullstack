@@ -2,6 +2,10 @@
 
 ## The Challenge ⚡️
 
+https://github.com/tpazyot127/chat-app_fullstack/assets/62755166/1f4c49ec-11fe-45fb-9c6e-47bb8a334057
+
+
+
 Here was the challenge:
 
 - Use a freely available or cheap, pre-trained language model for generating responses.
