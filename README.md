@@ -36,7 +36,7 @@ git clone
 Go to the project directory
 
 ```bash
-cd CHAT_APP_GPT
+cd chat-app_fullstack
 ```
 
 Remove remote origin
