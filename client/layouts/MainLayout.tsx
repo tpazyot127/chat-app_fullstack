@@ -3,20 +3,21 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import {
   useLocalStorage,
+  useTypedSelector,
   useUserActions,
 } from '../hooks';
 import { useEffect } from 'react';
 
 const MainLayout: React.FC = ({ children }: any) => {
-  const accessToken = useLocalStorage('', 'accessToken');
+  const user = useLocalStorage("", "userDatas");
   const { getCurrentUser } = useUserActions();
-  
  
   useEffect(() => {
-    if (accessToken.length > 0) {
-      getCurrentUser(accessToken);
+    if (user) {
+      const data = JSON.parse(user);
+      getCurrentUser(data._id);
     }
-  }, [accessToken]);
+  }, [user]);
 
   return (
     <div className="app__container">

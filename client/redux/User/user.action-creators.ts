@@ -1,17 +1,17 @@
-import Router from 'next/router';
-import { Dispatch } from 'redux';
-import { UserCredentials, UserEditCredentials } from '../../interfaces';
-import { api } from '../../lib';
-import { ActionTypes } from './user.action-types';
-import { UserAction } from './user.actions';
-import { toast } from 'react-toastify';
+import Router from "next/router";
+import { Dispatch } from "redux";
+import { UserCredentials, UserEditCredentials } from "../../interfaces";
+import { api } from "../../lib";
+import { ActionTypes } from "./user.action-types";
+import { UserAction } from "./user.actions";
+import { toast } from "react-toastify";
 
 export const login =
   (email: string, password: string) =>
   async (dispatch: Dispatch<UserAction>) => {
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     };
@@ -22,7 +22,7 @@ export const login =
       });
 
       const { data } = await api.post(
-        '/auth/login',
+        "/auth/login",
         {
           email,
           password,
@@ -40,10 +40,10 @@ export const login =
         payload: data,
       });
 
-      localStorage.setItem('accessToken', data.accessToken);
-      localStorage.setItem('userDatas', JSON.stringify(data));
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("userDatas", JSON.stringify(data));
 
-      Router.push('/');
+      Router.push("/");
     } catch (error: any) {
       dispatch({
         type: ActionTypes.USER_LOGIN_ERROR,
@@ -53,10 +53,11 @@ export const login =
   };
 
 export const getCurrentUser =
-  (accessToken: string) => async (dispatch: Dispatch<UserAction>) => {
+  ( id: string) =>
+  async (dispatch: Dispatch<UserAction>) => {
     const config = {
       headers: {
-        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     };
@@ -66,7 +67,7 @@ export const getCurrentUser =
         type: ActionTypes.GET_CURRENT_USER_START,
       });
 
-      const { data } = await api.get('/auth/profile', config);
+      const { data } = await api.get(`/users/${id}`, config);
 
       dispatch({
         type: ActionTypes.GET_CURRENT_USER_SUCCESS,
@@ -82,9 +83,9 @@ export const getCurrentUser =
 
 export const logout = () => async (dispatch: Dispatch<UserAction>) => {
   try {
-    await api.post('/auth/logout', {}, { withCredentials: true });
-    localStorage.clear()
-    Router.push('/')
+    await api.post("/auth/logout", {}, { withCredentials: true });
+    localStorage.clear();
+    Router.push("/");
     window.location.reload();
     dispatch({
       type: ActionTypes.USER_LOGOUT,
@@ -100,7 +101,7 @@ export const register =
   async (dispatch: Dispatch<UserAction>) => {
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       withCredentials: true,
     };
@@ -111,7 +112,7 @@ export const register =
       });
 
       const { data } = await api.post(
-        '/auth/register',
+        "/auth/register",
         {
           name,
           email,
@@ -130,8 +131,8 @@ export const register =
         payload: data,
       });
 
-      localStorage.setItem('accessToken', data.accessToken);
-      toast.success('Account created successfully');
+      localStorage.setItem("accessToken", data.accessToken);
+      toast.success("Account created successfully");
     } catch (error: any) {
       dispatch({
         type: ActionTypes.USER_REGISTER_ERROR,
@@ -155,11 +156,7 @@ export const updateUser =
         type: ActionTypes.USER_UPDATE_START,
       });
 
-      const { data } = await api.put(
-        '/auth/profile',
-        userCredentials,
-        config
-      );
+      const { data } = await api.put("/auth/profile", userCredentials, config);
 
       dispatch({
         type: ActionTypes.USER_UPDATE_SUCCESS,
@@ -188,7 +185,7 @@ export const fetchUsers = () => async (dispatch: Dispatch<UserAction>) => {
       type: ActionTypes.FETCH_USERS_START,
     });
 
-    const { data } = await api.get('/users', config);
+    const { data } = await api.get("/users", config);
 
     dispatch({
       type: ActionTypes.FETCH_USERS_SUCCESS,
@@ -264,11 +261,7 @@ export const adminUpdateUser =
         type: ActionTypes.ADMIN_UPDATE_USER_START,
       });
 
-      const { data } = await api.put(
-        `/users/${id}`,
-        userCredentials,
-        config
-      );
+      const { data } = await api.put(`/users/${id}`, userCredentials, config);
 
       dispatch({
         type: ActionTypes.ADMIN_UPDATE_USER_SUCCESS,
@@ -279,7 +272,7 @@ export const adminUpdateUser =
         type: ActionTypes.ADMIN_UPDATE_USER_RESET,
       });
 
-      Router.push('/admin/users');
+      Router.push("/admin/users");
     } catch (error: any) {
       dispatch({
         type: ActionTypes.ADMIN_UPDATE_USER_ERROR,

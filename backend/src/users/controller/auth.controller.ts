@@ -41,9 +41,11 @@ export class AuthController {
     return loggedUser;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Session() session: any) {
+    console.log('session', session);
+    
     return session.user;
   }
 

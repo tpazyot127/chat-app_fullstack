@@ -17,11 +17,8 @@ const Dashboard: React.FC = () => {
   const { error, data, loading }: any = useTypedSelector((state) => state.chat);
 
   const chatData: any = useTypedSelector((state) => state.chatMessages.data);
-  
+  const user: any = useTypedSelector((state) => state.user.data);
   const accessToken = useLocalStorage("", "accessToken");
-  const user = useLocalStorage("", "userDatas");
-
-  const [userDatas, setUserDatas] = useState<any>({});
 
   const [userInput, setUserInput] = useState("");
   const [errorData, setErrorData] = useState<ReturnedData | null>(null);
@@ -29,13 +26,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (user) {
-      try {
-        const chat = JSON.parse(user);
-        fetchChat(chat._id);
-        setUserDatas(chat);
-      } catch (error) {
-        console.error("Error parsing user datas:", error);
-      }
+        fetchChat(user._id);
     }
   }, [user]);
 
@@ -77,7 +68,7 @@ const Dashboard: React.FC = () => {
 
   useEffect(() => {
     if (messages.length > 0) {
-      saveChat(JSON.stringify({ messages }), userDatas.email, userDatas._id);
+      saveChat(JSON.stringify({ messages }), user.email, user._id);
     }
   }, [messages, saveChat]);
 
