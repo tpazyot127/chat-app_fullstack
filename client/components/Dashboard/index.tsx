@@ -14,7 +14,7 @@ interface ReturnedData {
 const Dashboard: React.FC = () => {
   const { createChat, saveChat, fetchChat } = useChatActions();
 
-  const { error, data, loading }: any = useTypedSelector((state) => state.chat);
+  const { error, data }: any = useTypedSelector((state) => state.chat);
 
   const chatData: any = useTypedSelector((state) => state.chatMessages.data);
   const user: any = useTypedSelector((state) => state.user.data);
@@ -23,7 +23,8 @@ const Dashboard: React.FC = () => {
   const [userInput, setUserInput] = useState("");
   const [errorData, setErrorData] = useState<ReturnedData | null>(null);
   const [messages, setMessages] = useState<any[]>([]);
-
+  const [loading, setLoading] = useState<boolean>(false);
+  
   useEffect(() => {
     if (user) {
         fetchChat(user._id);
@@ -63,6 +64,7 @@ const Dashboard: React.FC = () => {
         ...prevMessages,
         { role: "assistant", content: data.content },
       ]);
+      setLoading(false);
     }
   }, [data]);
 
@@ -82,6 +84,8 @@ const Dashboard: React.FC = () => {
     if (userInput.trim() === "") {
       return;
     }
+
+    setLoading(true);
     const context = [...messages, { role: "user", content: userInput }];
 
     createChat(JSON.stringify({ messages: context }));
