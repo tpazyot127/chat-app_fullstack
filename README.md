@@ -13,6 +13,7 @@ Here was the challenge:
 - User must login and registration
 - Save user chat history 
 - Implement rate limiting to prevent abuse of the chatbot system.
+- Note : If you can't send messages, please install 1.1.1.1 and start, then try again.
 
 ## Built With ✨
 
